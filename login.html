@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Σύστημα Προμηθειών</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background:
+                linear-gradient(rgba(244,246,248,0.78), rgba(244,246,248,0.78)),
+                url("warehouse.jpg") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 380px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 32px;
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(3px);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 34px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #34495e;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Σύνδεση Χρήστη</h2>
+
+    <form>
+        <label for="role">Ρόλος</label>
+        <select id="role" onchange="checkRole()">
+            <option value="">Επιλέξτε ρόλο</option>
+            <option value="gm">General Manager</option>
+            <option value="fb">F&B Manager</option>
+            <option value="ca">Chief Accountant</option>
+            <option value="warehouse">Υπάλληλος Αποθήκης</option>
+            <option value="supplier">Προμηθευτής</option>
+        </select>
+
+        <div id="normalLogin">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Εισαγωγή username">
+
+            <label for="password">Κωδικός</label>
+            <input type="password" id="password" placeholder="********">
+        </div>
+
+        <div id="supplierLogin" class="hidden">
+            <label for="supplierCode">Ειδικός Κωδικός Προμηθευτή</label>
+            <input type="text" id="supplierCode" placeholder="Εισαγωγή κωδικού από guest link">
+        </div>
+
+        <button type="submit">Σύνδεση</button>
+    </form>
+</div>
+
+<script>
+    function checkRole() {
+        var role = document.getElementById("role").value;
+        var normal = document.getElementById("normalLogin");
+        var supplier = document.getElementById("supplierLogin");
+
+        if (role === "supplier") {
+            normal.classList.add("hidden");
+            supplier.classList.remove("hidden");
+        } else {
+            normal.classList.remove("hidden");
+            supplier.classList.add("hidden");
+        }
+    }
+</script>
+
+</body>
+</html>

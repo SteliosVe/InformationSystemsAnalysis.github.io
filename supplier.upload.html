@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Προσφορών Προμηθευτή</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+            color: #2c3e50;
+        }
+
+        .topbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 18px 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .container {
+            padding: 40px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 34px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 17px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #cfd6dc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .status-box {
+            background: #eef7ff;
+            border-left: 5px solid #3498db;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #2c3e50;
+            margin-top: 8px;
+        }
+
+        .upload-area {
+            border: 2px dashed #b8c4ce;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            background: #f8fafb;
+            margin-bottom: 18px;
+        }
+
+        .upload-icon {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .upload-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .upload-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .upload-btn:hover {
+            background-color: #219150;
+        }
+
+        .summary-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .summary-pill {
+            background: #f4f8fb;
+            border: 1px solid #e1e8ee;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #445;
+        }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .file-item {
+            background: #f8fafb;
+            border: 1px solid #e4eaef;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .file-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .file-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .file-meta {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .file-status {
+            font-size: 13px;
+            font-weight: bold;
+            padding: 6px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .status-uploaded {
+            background: #eafaf1;
+            color: #1e8449;
+            border: 1px solid #2ecc71;
+        }
+
+        .status-pending {
+            background: #fff8e6;
+            color: #b9770e;
+            border: 1px solid #f1c40f;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .primary-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #219150;
+        }
+
+        .secondary-btn {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .secondary-btn:hover {
+            background: #34495e;
+        }
+
+        .note-box {
+            margin-top: 18px;
+            background: #fff8e6;
+            border-left: 5px solid #f1c40f;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #6b5b1d;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1000px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <h1>Πύλη Υποβολής Προσφορών Προμηθευτή</h1>
+</div>
+
+<div class="container">
+    <h1 class="page-title">Upload Προσφορών</h1>
+    <div class="page-subtitle">
+        Σελίδα υποβολής προσφορών και σχετικών αρχείων από τον προμηθευτή, με χρήση του ειδικού κωδικού πρόσβασης που έχει αποσταλεί μέσω guest link.
+    </div>
+
+    <div class="layout">
+
+        <div class="card">
+            <h3>Στοιχεία Υποβολής</h3>
+
+            <div class="form-group">
+                <label>Επωνυμία Προμηθευτή</label>
+                <input type="text" value="Agro Supply" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Ειδικός Κωδικός Πρόσβασης</label>
+                <input type="text" value="GST-LINK-2026-4587" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Κατηγορία Υποβολής</label>
+                <select>
+                    <option>Προσφορές Προϊόντων</option>
+                    <option>Ενημέρωση Κωδικών</option>
+                    <option>Συμπληρωματικά Αρχεία</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Περίοδος Αναφοράς</label>
+                <input type="text" placeholder="π.χ. Σεζόν Καλοκαίρι 2026">
+            </div>
+
+            <div class="form-group">
+                <label>Σχόλια Προμηθευτή</label>
+                <textarea placeholder="Προσθέστε διευκρινίσεις για την προσφορά, αλλαγές κωδικών ή ειδικές σημειώσεις."></textarea>
+            </div>
+
+            <div class="status-box">
+                ℹ️ Η υποβολή μπορεί να περιλαμβάνει αρχεία προσφορών, αναλυτικούς τιμοκαταλόγους και ενημερώσεις σχετικές με αλλαγές προϊόντων ή κωδικών.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Αρχεία Προσφοράς</h3>
+
+            <div class="summary-row">
+                <div class="summary-pill">3 αρχεία υποβλημένα</div>
+                <div class="summary-pill">1 αρχείο σε αναμονή ελέγχου</div>
+                <div class="summary-pill">Τελευταία ενημέρωση: 03/04/2026</div>
+            </div>
+
+            <div class="upload-area">
+                <div class="upload-icon">📂</div>
+                <div class="upload-title">Μεταφόρτωση Αρχείων</div>
+                <div class="upload-text">
+                    Υποστηρίζεται μεταφόρτωση προσφορών, λιστών προϊόντων και συνοδευτικών εγγράφων.
+                </div>
+                <div class="upload-btn">Upload Αρχείων</div>
+            </div>
+
+            <div class="file-list">
+
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-name">prosfora_laxanika_xlsx</div>
+                        <div class="file-meta">Ανεβασμένο: 01/04/2026 • Μέγεθος: 1.2 MB</div>
+                    </div>
+                    <div class="file-status status-uploaded">Υποβλήθηκε</div>
+                </div>
+
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-name">timokatalogos_agro_supply.pdf</div>
+                        <div class="file-meta">Ανεβασμένο: 02/04/2026 • Μέγεθος: 860 KB</div>
+                    </div>
+                    <div class="file-status status-uploaded">Υποβλήθηκε</div>
+                </div>
+
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-name">allagi_kodikwn_products.docx</div>
+                        <div class="file-meta">Ανεβασμένο: 03/04/2026 • Μέγεθος: 340 KB</div>
+                    </div>
+                    <div class="file-status status-pending">Σε Έλεγχο</div>
+                </div>
+
+            </div>
+
+            <div class="action-buttons">
+                <button class="primary-btn">✔ Οριστική Υποβολή</button>
+                <button class="secondary-btn">📝 Προσωρινή Αποθήκευση</button>
+            </div>
+
+            <div class="note-box">
+                ⚠️ Μετά την οριστική υποβολή, τα αρχεία προωθούνται στο σύστημα για αξιολόγηση και σύγκριση προσφορών. Ο προμηθευτής μπορεί να ενημερωθεί για τυχόν αιτήματα διευκρίνησης.
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
