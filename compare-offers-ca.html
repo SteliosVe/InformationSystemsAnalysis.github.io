@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Συγκρίσεις Προσφορών</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+            color: #2c3e50;
+        }
+
+        .topbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .menu div {
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .menu a {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            transition: background-color 0.2s, color 0.2s;
+            font-weight: 500;
+        }
+
+        .menu a:hover {
+            background-color: rgba(255,255,255,0.12);
+            color: #1abc9c;
+        }
+
+        @media (max-width: 900px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            .menu {
+                width: 100%;
+                gap: 8px;
+            }
+
+            .menu a {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+        }
+
+        .container {
+            padding: 32px;
+        }
+
+        .page-title {
+            font-size: 34px;
+            margin: 0 0 8px 0;
+        }
+
+        .page-subtitle {
+            color: #666;
+            margin-bottom: 26px;
+            font-size: 17px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .filters-card,
+        .table-card {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            padding: 24px;
+        }
+
+        .filters-card h2,
+        .table-card h2 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 24px;
+            color: #2c3e50;
+        }
+
+        .filter-group {
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e8ecef;
+        }
+
+        .filter-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .filter-group label.main-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #cfd6dc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .checkbox-list,
+        .radio-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .checkbox-list label,
+        .radio-list label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-range-box {
+            background: #f8fafb;
+            border: 1px solid #e3e8ec;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .price-values {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .range-visual {
+            position: relative;
+            height: 8px;
+            background: #dfe6e9;
+            border-radius: 999px;
+            margin: 22px 0 14px 0;
+        }
+
+        .range-selected {
+            position: absolute;
+            left: 18%;
+            right: 22%;
+            top: 0;
+            bottom: 0;
+            background: #1abc9c;
+            border-radius: 999px;
+        }
+
+        .range-thumb {
+            position: absolute;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border: 2px solid #1abc9c;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .range-thumb.left {
+            left: 18%;
+        }
+
+        .range-thumb.right {
+            left: 78%;
+        }
+
+        .filter-note {
+            background: #eef7f5;
+            color: #2c3e50;
+            border-left: 4px solid #1abc9c;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #2c3e50;
+            color: white;
+        }
+
+        th, td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #e8ecef;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f8fafb;
+        }
+
+        .type-badge,
+        .origin-badge,
+        .feature-badge,
+        .warning-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .type-badge {
+            background: #edf2f7;
+            color: #34495e;
+        }
+
+        .origin-eu {
+            background: #eafaf1;
+            color: #1e8449;
+        }
+
+        .origin-non-eu {
+            background: #fdecea;
+            color: #c0392b;
+        }
+
+        .feature-badge {
+            background: #eef7ff;
+            color: #2471a3;
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+
+        .unit-price-cell {
+            text-align: center;
+        }
+
+        .unit-price-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            transform: translateX(-6px);
+        }
+
+        .warning-badge {
+            display: inline-block;
+            background: #fdeeee;
+            color: #c0392b;
+            border: 2px solid #e74c3c;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    
+        .price-error {
+            font-weight: bold;
+            color: #c0392b;
+            display: block;
+        }
+
+        .supplier {
+            color: #555;
+        }
+
+        .actions {
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            user-select: none;
+            line-height: 1;
+        }
+
+        .btn-plus {
+            background: #27ae60;
+        }
+
+        .summary-bar {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .summary-pill {
+            background: #f4f8fb;
+            border: 1px solid #e1e8ee;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #445;
+        }
+
+        @media (max-width: 1100px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <h1>Σύστημα Προμηθειών</h1>
+        
+        <div class="menu">
+            <div><a href="home-ca.html">Home</a></div>
+            <div><a href="compare-offers-ca.html">Συγκρίσεις Προσφορών</a></div>
+            <div><a href="season-product-list-ca.html">Season Product List</a></div>
+            <div><a href="ca-inv-reg.html">Έλεγχος Καταχωρήσεων</a></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">Συγκρίσεις Προσφορών</h1>
+        <div class="page-subtitle">
+            Προβολή και σύγκριση των προσφερόμενων προϊόντων από τους προμηθευτές, με δυνατότητα εφαρμογής φίλτρων και προεπιλογής για ένταξη στη season product list.
+        </div>
+
+        <div class="layout">
+
+            <div class="filters-card">
+                <h2>Φίλτρα Αναζήτησης</h2>
+
+                <div class="filter-group">
+                    <label class="main-label">Κατάταξη τιμής μονάδας</label>
+                    <select>
+                        <option>Επιλέξτε σειρά ταξινόμησης</option>
+                        <option>Αύξουσα τιμή μονάδας</option>
+                        <option>Φθίνουσα τιμή μονάδας</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="main-label">Τύπος προϊόντος</label>
+                    <select>
+                        <option>Όλοι οι τύποι προϊόντων</option>
+                        <option>Κρέατα</option>
+                        <option>Γαλακτοκομικά</option>
+                        <option>Λαχανικά</option>
+                        <option>Φρούτα</option>
+                        <option>Ποτά</option>
+                        <option>Κατεψυγμένα</option>
+                        <option>Ξηρά Τρόφιμα</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="main-label">Εύρος τιμών ανά μονάδα</label>
+                    <div class="price-range-box">
+                        <div class="price-values">
+                            <span>Ελάχιστη: €0,10</span>
+                            <span>Μέγιστη: €500,00</span>
+                        </div>
+
+                        <div class="range-visual">
+                            <div class="range-selected"></div>
+                            <div class="range-thumb left"></div>
+                            <div class="range-thumb right"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="main-label">Χαρακτηριστικά προϊόντων</label>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox"> Βιολογικό</label>
+                        <label><input type="checkbox"> Premium ποιότητα</label>
+                        <label><input type="checkbox"> Χωρίς ζάχαρη</label>
+                        <label><input type="checkbox"> Χωρίς λακτόζη</label>
+                        <label><input type="checkbox"> Κατεψυγμένο</label>
+                        <label><input type="checkbox"> ΠΟΠ</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="main-label">Προμηθευτής</label>
+                    <select>
+                        <option>Όλοι οι προμηθευτές</option>
+                        <option>Fresh Meat ΑΕ</option>
+                        <option>Poultry Foods</option>
+                        <option>Dairy Select</option>
+                        <option>Green Market</option>
+                        <option>Agro Supply</option>
+                        <option>Fresh Fields</option>
+                        <option>Kitchen Prep Foods</option>
+                        <option>Tropical Imports</option>
+                        <option>Fruit House</option>
+                        <option>Frozen Pro</option>
+                        <option>Polar Foods</option>
+                        <option>Dry Goods SA</option>
+                        <option>Mediterranean Foods</option>
+                        <option>Juice Experts</option>
+                        <option>Hydro Supply</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="main-label">Χρόνος παράδοσης</label>
+                    <select>
+                        <option>Όλοι οι χρόνοι παράδοσης</option>
+                        <option>1 ημέρα</option>
+                        <option>2 ημέρες</option>
+                        <option>3 ημέρες</option>
+                        <option>4+ ημέρες</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="main-label">Προέλευση προϊόντος</label>
+                    <select>
+                        <option>Όλες οι προελεύσεις</option>
+                        <option>Εντός Ευρωπαϊκής Ένωσης</option>
+                        <option>Εκτός Ευρωπαϊκής Ένωσης</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="main-label">Προϊόντα με αποτυχία μετατροπής</label>
+                    <select>
+                        <option>Εμφάνιση στη λίστα</option>
+                        <option>Απόκρυψη από τη λίστα</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="main-label">Συνδυασμός φίλτρων</label>
+                    <div class="filter-note">
+                        Το σύστημα μπορεί να εφαρμόσει ταυτόχρονα πολλαπλά φίλτρα, όπως τύπο προϊόντος, προμηθευτή, προέλευση, χρόνο παράδοσης και εύρος τιμής, για ακριβέστερη σύγκριση και στοχευμένη επιλογή προϊόντων.
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <h2>Λίστα Συγκρίσεων Προσφορών</h2>
+
+                <div class="summary-bar">
+                    <div class="summary-pill">16 ενδεικτικά προϊόντα</div>
+                    <div class="summary-pill">Προβολή προσφορών από διαφορετικούς προμηθευτές</div>
+                    <div class="summary-pill">(+) για ένταξη στη season product list</div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Προϊόν</th>
+                            <th>Τύπος</th>
+                            <th>Προμηθευτής</th>
+                            <th>Τιμή / Μονάδα</th>
+                            <th>Χαρακτηριστικά</th>
+                            <th>Χρόνος Παράδοσης</th>
+                            <th>Προέλευση</th>
+                            <th>Ενέργεια</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Μοσχαρίσια μπριζόλα χωρίς κόκκαλο</td>
+                            <td><span class="type-badge">Κρέατα</span></td>
+                            <td class="supplier">Fresh Meat ΑΕ</td>
+                            <td class="price">€11,80 / κιλό</td>
+                            <td><span class="feature-badge">Premium</span></td>
+                            <td>2 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Κοτόπουλο φιλέτο</td>
+                            <td><span class="type-badge">Κρέατα</span></td>
+                            <td class="supplier">Poultry Foods</td>
+                            <td class="price">€6,40 / κιλό</td>
+                            <td><span class="feature-badge">Φρέσκο</span></td>
+                            <td>1 ημέρα</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Φέτα ΠΟΠ</td>
+                            <td><span class="type-badge">Γαλακτοκομικά</span></td>
+                            <td class="supplier">Dairy Select</td>
+                            <td class="price">€7,10 / κιλό</td>
+                            <td><span class="feature-badge">ΠΟΠ</span></td>
+                            <td>2 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Γάλα αμυγδάλου</td>
+                            <td><span class="type-badge">Ποτά</span></td>
+                            <td class="supplier">Green Market</td>
+                            <td class="price">€2,20 / τεμ.</td>
+                            <td><span class="feature-badge">Χωρίς λακτόζη</span></td>
+                            <td>3 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Ντομάτες</td>
+                            <td><span class="type-badge">Λαχανικά</span></td>
+                            <td class="supplier">Agro Supply</td>
+                            <td class="price">€1,65 / κιλό</td>
+                            <td><span class="feature-badge">Βιολογικό</span></td>
+                            <td>1 ημέρα</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Μαρούλι Iceberg</td>
+                            <td><span class="type-badge">Λαχανικά</span></td>
+                            <td class="supplier">Fresh Fields</td>
+                            <td class="price">€1,10 / τεμ.</td>
+                            <td><span class="feature-badge">Φρέσκο</span></td>
+                            <td>1 ημέρα</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Πατάτες καθαρισμένες</td>
+                            <td><span class="type-badge">Λαχανικά</span></td>
+                            <td class="supplier">Kitchen Prep Foods</td>
+                            <td class="price">€1,95 / κιλό</td>
+                            <td><span class="feature-badge">Έτοιμο προς χρήση</span></td>
+                            <td>2 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Ανανάς φρέσκος</td>
+                            <td><span class="type-badge">Φρούτα</span></td>
+                            <td class="supplier">Tropical Imports</td>
+                            <td class="price">€3,80 / τεμ.</td>
+                            <td><span class="feature-badge">Premium</span></td>
+                            <td>4 ημέρες</td>
+                            <td><span class="origin-badge origin-non-eu">Εκτός ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Μήλα κόκκινα</td>
+                            <td><span class="type-badge">Φρούτα</span></td>
+                            <td class="supplier">Fruit House</td>
+                            <td class="price">€2,10 / κιλό</td>
+                            <td><span class="feature-badge">Φρέσκο</span></td>
+                            <td>2 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Κατεψυγμένες πατάτες</td>
+                            <td><span class="type-badge">Κατεψυγμένα</span></td>
+                            <td class="supplier">Frozen Pro</td>
+                            <td class="price">€2,75 / κιλό</td>
+                            <td><span class="feature-badge">Κατεψυγμένο</span></td>
+                            <td>3 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Κατεψυγμένα λαχανικά ανάμεικτα</td>
+                            <td><span class="type-badge">Κατεψυγμένα</span></td>
+                            <td class="supplier">Polar Foods</td>
+                            <td class="price">€2,95 / κιλό</td>
+                            <td><span class="feature-badge">Κατεψυγμένο</span></td>
+                            <td>3 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Ρύζι μπασμάτι</td>
+                            <td><span class="type-badge">Ξηρά Τρόφιμα</span></td>
+                            <td class="supplier">Dry Goods SA</td>
+                            <td class="price">€2,60 / κιλό</td>
+                            <td><span class="feature-badge">Premium</span></td>
+                            <td>2 ημέρες</td>
+                            <td><span class="origin-badge origin-non-eu">Εκτός ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Μακαρόνια Νο6</td>
+                            <td><span class="type-badge">Ξηρά Τρόφιμα</span></td>
+                            <td class="supplier">Mediterranean Foods</td>
+                            <td class="price">€1,35 / κιλό</td>
+                            <td><span class="feature-badge">Κλασικό</span></td>
+                            <td>2 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Χυμός πορτοκάλι 1L</td>
+                            <td><span class="type-badge">Ποτά</span></td>
+                            <td class="supplier">Juice Experts</td>
+                            <td class="price">€1,85 / τεμ.</td>
+                            <td><span class="feature-badge">Χωρίς ζάχαρη</span></td>
+                            <td>2 ημέρες</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Εμφιαλωμένο νερό 1.5L</td>
+                            <td><span class="type-badge">Ποτά</span></td>
+                            <td class="supplier">Hydro Supply</td>
+                            <td class="price">€0,80 / τεμ.</td>
+                            <td><span class="feature-badge">Κλασικό</span></td>
+                            <td>1 ημέρα</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Κοτόπουλο ολόκληρο</td>
+                            <td><span class="type-badge">Κρέατα</span></td>
+                            <td class="supplier">Poultry Foods</td>
+                            <td class="unit-price-cell">
+                                <div class="unit-price-wrapper">
+                                    <span class="price-error">€48,00 / κιβώτιο</span>
+                                    <span class="warning-badge">Αποτυχία μετατροπής</span>
+                                </div>
+                            </td>
+                            <td><span class="feature-badge">Φρέσκο</span></td>
+                            <td>1 ημέρα</td>
+                            <td><span class="origin-badge origin-eu">ΕΕ</span></td>
+                            <td class="actions"><span class="btn-icon btn-plus">+</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
